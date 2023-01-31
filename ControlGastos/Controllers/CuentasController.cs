@@ -45,7 +45,7 @@ namespace ControlGastos.Controllers
         public async Task<IActionResult> Detalle(int id, int mes, int año)
         {
             var usuarioId = servicioUsuarios.ObtenerUsuarioId();
-            var cuenta = repositorioCuentas.ObtenerPorId(id, usuarioId);
+            var cuenta = await repositorioCuentas.ObtenerPorId(id, usuarioId);
 
             if(cuenta is null)
             {
@@ -94,6 +94,12 @@ namespace ControlGastos.Controllers
             modelo.TransaccionesAgrupadas = transaccionesPorFecha;
             modelo.FechaInicio = fechaInicio;
             modelo.FechaFin = fechaFin;
+
+            ViewBag.mesAnterior = fechaInicio.AddMonths(-1).Month;
+            ViewBag.añoAnterior = fechaInicio.AddMonths(-1).Year;
+            ViewBag.mesPosterior = fechaInicio.AddMonths(1).Month;
+            ViewBag.añoPosterior = fechaInicio.AddMonths(1).Year;
+            ViewBag.urlRetorno = HttpContext.Request.Path + HttpContext.Request.QueryString;
 
             return View(modelo);
         }
